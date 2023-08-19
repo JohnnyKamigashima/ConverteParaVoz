@@ -99,7 +99,7 @@ def polly_speak(response_file):
 
     # Use o método synthesize_speech() da API Polly para sintetizar o texto em fala
     response = polly_client.synthesize_speech(
-        OutputFormat='ogg_vorbis',
+        OutputFormat='mp3',
         Text=text,
         VoiceId=voice_id,
         LanguageCode=language_code,
@@ -107,7 +107,7 @@ def polly_speak(response_file):
         )
 
     # Salve o áudio sintetizado em um arquivo audio
-    audio_file = response_file + ".ogg"
+    audio_file = response_file + ".mp3"
     with open(audio_file, 'wb') as f:
         f.write(response['AudioStream'].read())
         f.close()
@@ -200,7 +200,7 @@ def main():
                 
                 polly_speak(RESPONSE_FILE + str(index))
                 os.remove(RESPONSE_FILE + str(index) + ".txt")
-                os.remove(RESPONSE_FILE + str(index) + ".ogg")
+                os.remove(RESPONSE_FILE + str(index) + ".mp3")
             bot_response = ""
     
     os.remove(PROMPT_FILE)  
