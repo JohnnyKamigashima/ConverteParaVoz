@@ -174,7 +174,7 @@ def main():
 
                 polly_speak(RESPONSE_FILE)
 
-                if index == 1:
+                if index == 0:
                     copy_file(RESPONSE_FILE + '.' + AUDIO_EXTENSION, OUTPUT_FILE)
                 else:
                     merge_mp3_files(
