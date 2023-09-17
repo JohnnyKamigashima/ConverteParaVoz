@@ -90,9 +90,10 @@ def main():
                 os.remove(response_file + ".txt")
                 os.remove(response_file + '.' + AUDIO_EXTENSION)
 
-        normalize_audio(OUTPUT_FILE)
-        audio_send(CHAT_ID, OUTPUT_FILE, BOT_TOKEN)
+        normalized_file = normalize_audio(OUTPUT_FILE)
+        audio_send(CHAT_ID, normalized_file, BOT_TOKEN)
         os.remove(OUTPUT_FILE)
+        os.remove(normalized_file)
         bot_response = ""
 
     os.remove(PROMPT_FILE)

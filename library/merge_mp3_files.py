@@ -42,20 +42,18 @@ def normalize_audio(file_name):
     audio = AudioSegment.from_file(file_name, format="mp3")
 
     # Divide o áudio em segmentos de 1 segundo
-    chunks = make_chunks(audio, 1000)
+    chunks = make_chunks(audio, 10000)
 
     # Calcula o valor RMS de cada segmento e normaliza o volume
-    normalized_chunks = []
+    normalized_audio = AudioSegment.empty()
     for chunk in chunks:
         rms = chunk.rms
-        normalized_chunk = chunk - (rms - 100)
-        normalized_chunks.append(normalized_chunk)
-
-    # Junta os segmentos normalizados
-    normalized_audio = AudioSegment.from_mono_audiosegments(*normalized_chunks)
+        normalized_chunk = chunk - (rms - 75)
+        normalized_audio += normalized_chunk
 
     # Exporta o áudio normalizado para um novo arquivo MP3
     normalized_file_name = file_name.replace(".mp3", "_normalized.mp3")
-    normalized_audio.export(normalized_file_name, format="mp3")
+    normalized_audio.export(normalized_file_name, format="mp3", bitrate="320k")
 
     print("Áudio normalizado salvo como:", normalized_file_name)
+    return normalized_file_name
