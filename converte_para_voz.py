@@ -32,7 +32,7 @@ for line in contents.split('\n'):
 MODEL = 'gpt-3.5-turbo'
 
 # Defining the bot's personality using adjectives
-BOT_PERSONALITY = 'Escreva em português do Brasil, deixando o texto a seguir de forma mais clara.'
+BOT_PERSONALITY = 'Reescreva em português do Brasil, corrigindo com pontuação correta para uma melhor leitura.'
 
 # Define response file
 RESPONSE_BASE_FILE = './responses/responseGPT'
