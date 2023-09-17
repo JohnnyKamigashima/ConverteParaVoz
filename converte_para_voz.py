@@ -2,11 +2,12 @@
 """
 import sys
 import os
+import pynormalize
 from library.text import limpar_linhas_vazias, remove_emojis, remover_quebras_duplas_e_espacos
 from library.telegram_bot import telegram_bot_sendtext, audio_send
 from library.open_ai import open_ai
 from library.polly_speak import polly_speak
-from library.merge_mp3_files import merge_mp3_files, normalize_audio
+from library.merge_mp3_files import merge_mp3_files
 from library.copy_file import copy_file
 
 with open('../.openapi_credentials', encoding='utf-8') as f:
@@ -90,10 +91,10 @@ def main():
                 os.remove(response_file + ".txt")
                 os.remove(response_file + '.' + AUDIO_EXTENSION)
 
-        normalized_file = normalize_audio(OUTPUT_FILE)
-        audio_send(CHAT_ID, normalized_file, BOT_TOKEN)
+        pynormalize.process_files(Files=OUTPUT_FILE,target_dbfs=-70,directory='responses')
+        audio_send(CHAT_ID, OUTPUT_FILE, BOT_TOKEN)
         os.remove(OUTPUT_FILE)
-        os.remove(normalized_file)
+        os.remove('NORMALIZED/' + OUTPUT_FILE)
         bot_response = ""
 
     os.remove(PROMPT_FILE)
