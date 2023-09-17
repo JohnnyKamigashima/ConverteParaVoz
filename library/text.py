@@ -51,23 +51,66 @@ def remove_emojis(text):
 
     return emoji_pattern.sub(r'', text)
 
-def remover_quebras_duplas_e_espacos(string: str) -> str:
+def substituir_quebras_de_linha(texto, caracteres):
     """
-    Removes duplicate line breaks and duplicate spaces from a given string.
+        Generate a function comment for the given function body in a markdown
+        code block with the correct language syntax.
+
+        Parameters:
+            texto (str): The input text to be processed.
+            caracteres (int): The maximum number of characters allowed in a line.
+
+        Returns:
+            str: The processed text with line breaks substituted.
+    """
+    # Adicionar ponto final no final de cada frase
+    texto = texto.replace(". ", ".\n")
+
+    # Substituir quebra de linha simples por espaço
+    texto = texto.replace("\n", " ")
+
+    # Substituir duas quebras de linha por uma quebra única
+    texto = texto.replace("\n\n", "\n")
+
+    # Remover quebras de linha quando a linha tiver menos de 200 caracteres
+    linhas = texto.split("\n")
+    linhas_formatadas = []
+    for linha in linhas:
+        if len(linha) < caracteres:
+            linha = linha.replace("\n", " ")
+        linhas_formatadas.append(linha)
+    texto = "\n".join(linhas_formatadas)
+
+    return texto
+
+def adicionar_quebras_de_linha(texto, caracteres):
+    """
+    Splits a given text into multiple lines, inserting line breaks
+    after a certain number of characters.
 
     Args:
-        string (str): The input string that may contain duplicate line breaks and spaces.
+        texto (str): The text to be formatted.
+        caracteres (int): The number of characters after which a line break should be inserted.
 
     Returns:
-        str: The input string with duplicate line breaks and spaces removed.
+        str: The formatted text with line breaks inserted.
+
     """
-    if string is None or string == "":
-        return string
-
-    try:
-        modified_string = re.sub(r'\n+| +', ' ', string)
-    except re.error as error:
-        print(f"Regex error: {error}")
-        modified_string = string
-
-    return modified_string
+    linhas = texto.split("\n")
+    linhas_formatadas = []
+    for linha in linhas:
+        if len(linha) > caracteres:
+            nova_linha = ""
+            palavras = linha.split(".")
+            contador = 0
+            for palavra in palavras:
+                nova_linha += palavra + "."
+                contador += len(palavra) + 1
+                if contador > caracteres:
+                    nova_linha += "\n"
+                    contador = 0
+            linhas_formatadas.append(nova_linha)
+        else:
+            linhas_formatadas.append(linha)
+    texto_formatado = "\n".join(linhas_formatadas)
+    return texto_formatado

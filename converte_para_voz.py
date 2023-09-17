@@ -3,7 +3,7 @@
 import sys
 import os
 import pynormalize
-from library.text import limpar_linhas_vazias, remove_emojis, remover_quebras_duplas_e_espacos
+from library.text import limpar_linhas_vazias, remove_emojis, adicionar_quebras_de_linha, substituir_quebras_de_linha
 from library.telegram_bot import telegram_bot_sendtext, audio_send
 from library.open_ai import open_ai
 from library.polly_speak import polly_speak
@@ -59,7 +59,7 @@ def main():
         prompt_list = prompts.split('\n')
 
         for index, prompt in enumerate(prompt_list):
-            prompt = remover_quebras_duplas_e_espacos(prompt)
+            prompt = adicionar_quebras_de_linha(substituir_quebras_de_linha(prompt,200),400)
             string_formatada = f"{index:03d}"
             response_file = RESPONSE_BASE_FILE + str(string_formatada)
 
