@@ -50,6 +50,7 @@ def main():
     # rest of the code...
     with open(PROMPT_FILE, "r", encoding="utf-8") as file:
         prompts = limpar_linhas_vazias(remove_emojis(file.read().strip()))
+        prompts = adicionar_quebras_de_linha(substituir_quebras_de_linha(prompts,200),400)
         contador_linhas = len(prompts.split('\n'))
 
     if contador_linhas == 1:
@@ -59,11 +60,11 @@ def main():
         prompt_list = prompts.split('\n')
 
         for index, prompt in enumerate(prompt_list):
-            prompt = adicionar_quebras_de_linha(substituir_quebras_de_linha(prompt,200),400)
             string_formatada = f"{index:03d}"
             response_file = RESPONSE_BASE_FILE + str(string_formatada)
 
             if len(prompt) > 10:
+                print("\nPROMPT => " + prompt)
                 bot_response = open_ai(
                                         [{
                                             'role': 'user',
@@ -76,6 +77,7 @@ def main():
 
                 bot_response = bot_response.replace('\n', '. ').strip()
                 bot_response = bot_response.replace('..', '.')
+                print('\nRESPONSE => ' + bot_response)
 
                 with open(response_file + '.txt', "w", encoding="utf-8") as file:
                     file.write(bot_response)
@@ -93,11 +95,14 @@ def main():
 
         pynormalize.process_files(Files=OUTPUT_FILE,target_dbfs=-70,directory='responses')
         audio_send(CHAT_ID, OUTPUT_FILE, BOT_TOKEN)
-        os.remove(OUTPUT_FILE)
-        os.remove('NORMALIZED/' + OUTPUT_FILE)
+
+        if os.path.exists(PROMPT_FILE):
+            os.remove(OUTPUT_FILE)
+
         bot_response = ""
 
-    os.remove(PROMPT_FILE)
+    if os.path.exists(PROMPT_FILE):
+        os.remove(PROMPT_FILE)
 
 # Define Prompt file
 while True:

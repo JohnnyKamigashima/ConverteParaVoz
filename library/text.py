@@ -66,8 +66,8 @@ def substituir_quebras_de_linha(texto, caracteres):
     # Adicionar ponto final no final de cada frase
     texto = texto.replace(". ", ".\n")
 
-    # Substituir quebra de linha simples por espaço
-    texto = texto.replace("\n", " ")
+    # Substituir quebra de linha simples por ponto e espaço
+    texto = texto.replace("\n", ". ")
 
     # Substituir duas quebras de linha por uma quebra única
     texto = texto.replace("\n\n", "\n")
