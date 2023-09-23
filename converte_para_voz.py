@@ -42,7 +42,7 @@ QUEUE_FILE = 'queue.txt'
 AUDIO_EXTENSION = 'mp3'
 OUTPUT_FILE = './responses/output'+'.' + AUDIO_EXTENSION
 
-def main():
+def main(PROMPT_FILE, CHAT_ID, BOT_TOKEN):
     """
     This is the main function of the program.
     It reads prompts from a file and sends them to a Telegram chat.
@@ -85,24 +85,26 @@ def main():
                 polly_speak(response_file)
 
                 if index == 0:
-                    copy_file(response_file + '.' + AUDIO_EXTENSION, OUTPUT_FILE)
+                    if os.path.exists(response_file + '.' + AUDIO_EXTENSION):
+                        copy_file(response_file + '.' + AUDIO_EXTENSION, OUTPUT_FILE)
                 else:
-                    merge_mp3_files(
-                        [OUTPUT_FILE, response_file + '.' + AUDIO_EXTENSION], OUTPUT_FILE)
+                    if os.path.exists(OUTPUT_FILE):
+                        merge_mp3_files(
+                            [OUTPUT_FILE, response_file + '.' + AUDIO_EXTENSION], OUTPUT_FILE)
 
-                os.remove(response_file + ".txt")
-                os.remove(response_file + '.' + AUDIO_EXTENSION)
+                if os.path.exists(response_file + '.txt'):
+                    os.remove(response_file + ".txt")
 
-        pynormalize.process_files(Files=OUTPUT_FILE,target_dbfs=-70,directory='responses')
-        audio_send(CHAT_ID, OUTPUT_FILE, BOT_TOKEN)
+                if os.path.exists(response_file + '.' + AUDIO_EXTENSION):
+                    os.remove(response_file + '.' + AUDIO_EXTENSION)
 
-        if os.path.exists(PROMPT_FILE):
+        if os.path.exists(OUTPUT_FILE):
+            pynormalize.process_files(Files=[OUTPUT_FILE],target_dbfs=-70,directory='responses')
+            audio_send(CHAT_ID, OUTPUT_FILE, BOT_TOKEN)
             os.remove(OUTPUT_FILE)
 
         bot_response = ""
 
-    if os.path.exists(PROMPT_FILE):
-        os.remove(PROMPT_FILE)
 
 # Define Prompt file
 while True:
@@ -113,16 +115,19 @@ while True:
             print(PROMPT_FILE)
             lines = p_file.readlines()
 
+
+        if PROMPT_FILE != '':
+            main(PROMPT_FILE, CHAT_ID, BOT_TOKEN)
+
+            if os.path.exists(PROMPT_FILE):
+                os.remove(PROMPT_FILE)
+
         with open(QUEUE_FILE, 'w',encoding='utf-8') as p_file:
             p_file.writelines(lines[1:])
-        if PROMPT_FILE != '':
-            main()
+
+            if len(lines) == 0:
+                break
 
     else:
         PROMPT_FILE = sys.argv[1]
-        main()
-
-    # Adicione aqui o restante do seu código que precisa ser executado repetidamente
-
-    if len(lines) == 0:
-        break
+        main(PROMPT_FILE, CHAT_ID, BOT_TOKEN)
