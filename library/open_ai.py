@@ -3,6 +3,7 @@
 
 import requests
 from requests.exceptions import HTTPError
+
 def open_ai(prompt, api_key, model, base_url):
     """
     Improved version of the open_ai function.
@@ -18,7 +19,11 @@ def open_ai(prompt, api_key, model, base_url):
     """
 
     try:
+        # Trim the prompt string
+        prompt = prompt.strip()
+
         # Make the request to the OpenAI API
+        
         response = requests.post(
             f'{base_url}/v1/chat/completions',
             headers={'Authorization': f'Bearer {api_key}'},
