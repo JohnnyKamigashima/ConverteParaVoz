@@ -2,3 +2,4 @@
 *.ogg
 *.mp3
 .DS_Store
+*.pyc

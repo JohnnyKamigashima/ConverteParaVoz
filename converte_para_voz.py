@@ -66,14 +66,26 @@ def main(PROMPT_FILE, CHAT_ID, BOT_TOKEN):
             if len(prompt) > 10:
                 print("\nPROMPT => " + prompt)
                 bot_response = open_ai(
-                                        [{
-                                            'role': 'user',
-                                            'content': f'{BOT_PERSONALITY} {prompt}'
-                                            }],
-                                        API_KEY,
-                                        MODEL,
-                                        base_url='https://api.openai.com'
-                                        )
+                    [{
+                        'role': 'user',
+                        'content': f'{BOT_PERSONALITY} {prompt}'
+                    }],
+                    API_KEY,
+                    MODEL,
+                    base_url='https://api.openai.com'
+                )
+
+                while '500 Server Error' in bot_response or '502 Server Error' in bot_response:
+                    print('Error: 5** Server Error. Retrying...')
+                    bot_response = open_ai(
+                        [{
+                            'role': 'user',
+                            'content': f'{BOT_PERSONALITY} {prompt}'
+                        }],
+                        API_KEY,
+                        MODEL,
+                        base_url='https://api.openai.com'
+                    )
 
                 bot_response = bot_response.replace('\n', '. ').strip()
                 bot_response = bot_response.replace('..', '.')
@@ -105,7 +117,6 @@ def main(PROMPT_FILE, CHAT_ID, BOT_TOKEN):
 
         bot_response = ""
 
-
 # Define Prompt file
 while True:
     if len(sys.argv) < 2:
@@ -114,7 +125,6 @@ while True:
             PROMPT_FILE = p_file.readline().strip()
             print(PROMPT_FILE)
             lines = p_file.readlines()
-
 
         if PROMPT_FILE != '':
             main(PROMPT_FILE, CHAT_ID, BOT_TOKEN)
