@@ -108,21 +108,22 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
         bot_response = ""
 
 while True:
+    with open(QUEUE_FILE, 'r', encoding='utf-8') as p_file:
+        lines = p_file.readlines()
+
     if len(sys.argv) < 2:
         print("Não foi fornecido argumento, usando lista queue.txt")
-        with open(QUEUE_FILE, 'r', encoding='utf-8') as p_file:
-            prompt_file: str = p_file.readline().strip()
-            print(prompt_file)
+        prompt_file = lines[0].strip()
+        print(prompt_file)
 
         if prompt_file != '' and os.path.exists(prompt_file):
             main(prompt_file, CHAT_ID, BOT_TOKEN, API_KEY)
             os.remove(prompt_file)
 
-        with open(QUEUE_FILE, 'w',encoding='utf-8') as p_file:
-            lines = p_file.readlines()
+        with open(QUEUE_FILE, 'w', encoding='utf-8') as p_file:
             p_file.writelines(lines[1:])
 
-            if len(lines) == 1:
+            if len(lines) == 0:
                 break
 
     else:
@@ -131,3 +132,4 @@ while True:
             main(prompt_file, CHAT_ID, BOT_TOKEN, API_KEY)
             os.remove(prompt_file)
         break
+    
