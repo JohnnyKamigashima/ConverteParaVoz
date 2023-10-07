@@ -1,6 +1,7 @@
 """Text manipulation functions
 """
 import re
+from unidecode import unidecode
 def limpar_linhas_vazias(texto):
     """
     Removes empty lines from a given text.
@@ -19,7 +20,6 @@ def limpar_linhas_vazias(texto):
     linhas_limpas = [line for line in linhas if line.strip()]
     texto_limpo = "\n".join(linhas_limpas).strip()
     return texto_limpo
-
 
 def remove_emojis(text):
     """
@@ -114,3 +114,19 @@ def adicionar_quebras_de_linha(texto, caracteres):
             linhas_formatadas.append(linha)
     texto_formatado = "\n".join(linhas_formatadas)
     return texto_formatado
+
+def limpa_titulo(titulo:str, maximo_caracteres:int):
+    """
+    Removes the first line of a given text.
+
+    Args:
+        titulo (str): The text to be processed.
+        maximo_caracteres (int): The maximum number of characters allowed in a line.
+        """
+
+    invalid_chars = ['<', '>', ':', '"', '/', '\\', '|', '?', '*' ]
+
+    for char in invalid_chars:
+        titulo = titulo.replace(char, '')
+        titulo = titulo.replace(' ', '_')
+    return unidecode(titulo)

@@ -44,6 +44,11 @@ AUDIO_EXTENSION = 'mp3'
 OUTPUT_FILE = './responses/output'+'.' + AUDIO_EXTENSION
 OGG_OUTPUT_FILE = './responses/output'+'.' + 'ogg'
 AUDIO_OUTPUT_PATH = './responses/'
+TEXTO_INDESEJADO: list[str] = [
+    'Reescreva em português do Brasil, corrigindo com pontuação correta para uma melhor leitura',
+    'Reescrevendo com pontuação correta:',
+    bot_personality
+    ]
 
 def main(prompt_from_file, chat_id, chat_token, api_key):
     """
@@ -76,9 +81,8 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
                     titulo_texto: str = prompt.replace(" ", "_")[:15]
                     mp3_file = AUDIO_OUTPUT_PATH + titulo_texto + '.' + AUDIO_EXTENSION
                     ogg_file = AUDIO_OUTPUT_PATH + titulo_texto + '.' + 'ogg'
-                bot_response: str = query_openai(prompt, MODEL, api_key, bot_personality)
-                bot_response = bot_response.replace('\n', '. ').strip()
-                bot_response = bot_response.replace('..', '.')
+                bot_response: str = query_openai(prompt, MODEL, api_key, bot_personality, TEXTO_INDESEJADO)
+
                 print('\nRESPONSE => ' + bot_response)
 
                 write_response(response_file, bot_response)
@@ -123,5 +127,7 @@ while True:
 
     else:
         prompt_file = sys.argv[1]
-        main(prompt_file, CHAT_ID, BOT_TOKEN, API_KEY)
+        if prompt_file != '' and os.path.exists(prompt_file):
+            main(prompt_file, CHAT_ID, BOT_TOKEN, API_KEY)
+            os.remove(prompt_file)
         break
