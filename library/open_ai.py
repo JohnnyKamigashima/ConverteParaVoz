@@ -4,7 +4,7 @@
 import requests
 from requests.exceptions import HTTPError
 
-def open_ai(prompt, api_key, model, base_url, max_retries=3):
+def open_ai(prompt, api_key, model, base_url, max_retries=3) -> str:
     """
     Improved version of the open_ai function.
 
@@ -44,7 +44,7 @@ def open_ai(prompt, api_key, model, base_url, max_retries=3):
             # Handle other request-related errors here
             print(f"Request Exception occurred: {error}")
             retries += 1
-    return None
+    return ''
 
 def query_openai(prompt, model, api_key_value, bot_personality_value):
     """
@@ -61,7 +61,7 @@ def query_openai(prompt, model, api_key_value, bot_personality_value):
     """
     prompt = prompt.strip()
     print("\nPROMPT => " + prompt)
-    bot_response = open_ai(
+    bot_response: str = open_ai(
         [{
             'role': 'user',
             'content': f'{bot_personality_value} {prompt}'

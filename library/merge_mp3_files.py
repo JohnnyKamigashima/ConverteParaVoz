@@ -23,7 +23,7 @@ def merge_mp3_files(mp3_files, output_file, audio_extension="mp3"):
         audio = AudioSegment.from_mp3(file)
         combined += audio
 
-    combined.export(output_file, format=audio_extension, bitrate="128k")
+    combined.export(output_file, format=audio_extension, bitrate="320k")
 
 def normalize_audio(file_name):
     """
@@ -57,34 +57,16 @@ def normalize_audio(file_name):
     print("Áudio normalizado salvo como:", normalized_file_name)
     return normalized_file_name
 
-def convert_mp3_ogg(input_file):
+def convert_mp3_ogg(input_file:str ,output_file:str):
     """
     Converts an mp3 file to ogg format.
 
     Args:
         input_file (str): The path to the input mp3 file.
+        output_file (str): The path to the output ogg file.
 
     Returns:
         None
     """
     sound = AudioSegment.from_file(input_file, format="mp3")
-    sound.export(input_file, format="ogg")
-
-def merge_audio(response_file, output_file, audio_extension):
-    """
-    Merges an audio file with another audio file and saves the result to the output file.
-
-    Args:
-        response_file (str): The path to the audio file to be merged.
-        output_file (str): The path to the output file.
-        audio_extension (str): The extension of the audio file.
-
-    Returns:
-        None
-    """
-    if os.path.exists(output_file):
-        merge_mp3_files(
-            [output_file, response_file + '.' + audio_extension], output_file)
-
-import os
-
+    sound.export(output_file, format="ogg")
