@@ -129,4 +129,4 @@ def limpa_titulo(titulo:str, maximo_caracteres:int):
     for char in invalid_chars:
         titulo = titulo.replace(char, '')
         titulo = titulo.replace(' ', '_')
-    return unidecode(titulo)
+    return unidecode(titulo)[:maximo_caracteres]
