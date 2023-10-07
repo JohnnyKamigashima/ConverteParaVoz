@@ -6,7 +6,7 @@ from library.copy_file import remove_files
 from library.merge_mp3_files import convert_mp3_ogg, merge_mp3_files
 from library.open_ai import query_openai, write_response
 from library.telegram_bot import audio_send, telegram_bot_sendtext
-from library.text import limpar_linhas_vazias, remove_emojis, adicionar_quebras_de_linha, substituir_quebras_de_linha
+from library.text import limpa_titulo, limpar_linhas_vazias, remove_emojis, adicionar_quebras_de_linha, substituir_quebras_de_linha
 from library.polly_speak import polly_speak
 
 with open('../.openapi_credentials', encoding='utf-8') as f:
@@ -78,7 +78,7 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
 
             if len(prompt) > 10:
                 if index == 0:
-                    titulo_texto: str = prompt.replace(" ", "_")[:15]
+                    titulo_texto: str = limpa_titulo(prompt, 30)
                     mp3_file = AUDIO_OUTPUT_PATH + titulo_texto + '.' + AUDIO_EXTENSION
                     ogg_file = AUDIO_OUTPUT_PATH + titulo_texto + '.' + 'ogg'
                 bot_response: str = query_openai(prompt, MODEL, api_key, bot_personality, TEXTO_INDESEJADO)
