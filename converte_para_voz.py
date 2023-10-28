@@ -34,7 +34,7 @@ for line in contents.split('\n'):
 MODEL = 'gpt-3.5-turbo'
 
 # Defining the bot's personality using adjectives
-bot_personality = 'Reescreva o texto a seguir em português do Brasil, corrigindo com pontuação correta para uma melhor leitura sem mencionar que está sendo reescrito.'
+bot_personality = 'Reescreva o texto a seguir em português do Brasil, corrigindo com pontuação correta para uma melhor leitura:'
 
 # Define response file
 RESPONSE_BASE_FILE = './responses/responseGPT'
@@ -112,8 +112,12 @@ while True:
     with open(QUEUE_FILE, 'r', encoding='utf-8') as p_file:
         lines = p_file.readlines()
 
+    if len(lines) == 0:
+        print("The queue file is empty. Exiting the program.")
+        break
+
     if len(sys.argv) < 2:
-        print("Não foi fornecido argumento, usando lista queue.txt")
+        print("No argument provided, using queue.txt list.")
         prompt_file = lines[0].strip()
         print(prompt_file)
 
@@ -123,9 +127,6 @@ while True:
 
         with open(QUEUE_FILE, 'w', encoding='utf-8') as p_file:
             p_file.writelines(lines[1:])
-
-            if len(lines) == 0:
-                break
 
     else:
         prompt_file = sys.argv[1]
