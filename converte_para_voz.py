@@ -34,7 +34,7 @@ for line in contents.split('\n'):
 MODEL = 'gpt-3.5-turbo'
 
 # Defining the bot's personality using adjectives
-bot_personality = 'Reescreva em português do Brasil, corrigindo com pontuação correta para uma melhor leitura.'
+bot_personality = 'Reescreva o texto a seguir em português do Brasil, corrigindo com pontuação correta para uma melhor leitura sem mencionar que está sendo reescrito.'
 
 # Define response file
 RESPONSE_BASE_FILE = './responses/responseGPT'
@@ -47,6 +47,7 @@ AUDIO_OUTPUT_PATH = './responses/'
 TEXTO_INDESEJADO: list[str] = [
     'Reescreva em português do Brasil, corrigindo com pontuação correta para uma melhor leitura',
     'Reescrevendo com pontuação correta:',
+    'Reescrevendo em português do Brasil, com a pontuação correta para uma melhor leitura:',
     bot_personality
     ]
 
