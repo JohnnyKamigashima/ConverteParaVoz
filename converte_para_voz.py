@@ -8,6 +8,7 @@ from library.open_ai import query_openai, write_response
 from library.telegram_bot import audio_send, telegram_bot_sendtext
 from library.text import limpa_titulo, limpar_linhas_vazias, remove_emojis, adicionar_quebras_de_linha, substituir_quebras_de_linha
 from library.polly_speak import polly_speak
+from openai import OpenAI
 
 with open('../.openapi_credentials', encoding='utf-8') as f:
     contents = f.read()
@@ -31,10 +32,10 @@ for line in contents.split('\n'):
 # region=us-east-1
 
 # Models: text-davinci-003,text-curie-001,text-babbage-001,text-ada-001
-MODEL = 'gpt-3.5-turbo'
+MODEL = 'gpt-3.5-turbo-1106'
 
 # Defining the bot's personality using adjectives
-bot_personality = 'Reescreva o texto a seguir em português do Brasil, corrigindo com pontuação correta para uma melhor leitura:'
+bot_personality = 'Reescreva o texto a seguir em português do Brasil, corrigindo com pontuação correta para uma melhor leitura em formato JSON'
 
 # Define response file
 RESPONSE_BASE_FILE = './responses/responseGPT'
@@ -92,6 +93,7 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
 
         merge_mp3_files(lista_arquivos_audio, mp3_file)
         convert_mp3_ogg(mp3_file, ogg_file)
+        telegram_bot_sendtext(titulo_texto, chat_id, chat_token)
         audio_send(chat_id, ogg_file, chat_token )
 
         print('Arquivoa a serem removidos:\n')

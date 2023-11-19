@@ -5,6 +5,7 @@ pip3 install pydub
 pip3 install unidecode
 pip3 install pynormalize
 pip3 install ffmpeg
+pip3 install openai
 
 cd ~/odrive/GDrive/code/ConverteParaVoz/
 python3 converte_para_voz.py

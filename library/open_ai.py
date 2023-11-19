@@ -1,10 +1,14 @@
 """ Funções para usar OpenAi Api
 """
 
+import json
+from math import e
 import requests
 from requests.exceptions import HTTPError
+from openai import OpenAI
 
-def open_ai(prompt, api_key, model, base_url, max_retries=3) -> str:
+
+def open_ai(system, prompt, api_key, model, max_retries=3) -> str:
     """
     Improved version of the open_ai function.
 
@@ -19,22 +23,40 @@ def open_ai(prompt, api_key, model, base_url, max_retries=3) -> str:
         str: The final result from the API response.
     """
 
+    client = OpenAI(api_key=api_key)
     retries = 0
     while retries < max_retries:
         try:
-            response = requests.post(
-                f'{base_url}/v1/chat/completions',
-                headers={'Authorization': f'Bearer {api_key}'},
-                json={'model': model, 'messages': prompt, 'temperature': 0.01},
-                timeout=60000  # Set a timeout of 10 seconds
+            # This code is for v1 of the openai package: pypi.org/project/openai
+            response = client.chat.completions.create(
+                model=model,
+                response_format={"type": "json_object"},
+                messages=[
+                    {
+                        "role": "system",
+                        "content": f"{system}"
+                    },
+                    {
+                        "role": "user",
+                        "content": f"{prompt}"
+                    }
+                ],
+                temperature=1,
+                max_tokens=256,
+                top_p=1,
+                frequency_penalty=0,
+                presence_penalty=0
             )
 
-            response.raise_for_status()
+            result = response.choices[0].message.content
+            result_json = json.loads(result)
+            concatenated_values = ''
 
-            result = response.json()
+            for key, value in result_json.items():
+                concatenated_values += str(value) + '\n'
 
-            final_result = ''.join(choice['message'].get('content')
-                                    for choice in result['choices'])
+            final_result = concatenated_values.rstrip()
+
             return final_result
         except HTTPError as error:
             # Handle specific HTTP errors here
@@ -43,6 +65,14 @@ def open_ai(prompt, api_key, model, base_url, max_retries=3) -> str:
         except requests.exceptions.RequestException as error:
             # Handle other request-related errors here
             print(f"Request Exception occurred: {error}")
+            retries += 1
+        except json.decoder.JSONDecodeError as error:
+            # Handle JSON decoding errors here
+            print(f"JSON Decode Error occurred: {error}")
+            retries += 1
+        except AttributeError as error:
+            # Handle attribute errors here
+            print(f"Attribute Error occurred: {error}")
             retries += 1
     return ''
 
@@ -63,13 +93,10 @@ def query_openai(prompt, model, api_key_value, bot_personality_value, texto_inde
     prompt = prompt.strip()
     print("\nPROMPT => " + prompt)
     bot_response: str = open_ai(
-        [{
-            'role': 'user',
-            'content': f'{bot_personality_value} {prompt}'
-        }],
+        bot_personality_value,
+        prompt,
         api_key_value,
-        model,
-        base_url='https://api.openai.com'
+        model
     )
     bot_response = bot_response.replace('\n', '. ').strip()
     bot_response = bot_response.replace('..', '.')
