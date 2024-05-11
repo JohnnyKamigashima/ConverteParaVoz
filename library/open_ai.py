@@ -2,11 +2,9 @@
 """
 
 import json
-from math import e
 import requests
 from requests.exceptions import HTTPError
 from openai import OpenAI
-
 
 def open_ai(system, prompt, api_key, model, max_retries=3) -> str:
     """
@@ -22,8 +20,8 @@ def open_ai(system, prompt, api_key, model, max_retries=3) -> str:
     Returns:
         str: The final result from the API response.
     """
-
-    client = OpenAI(api_key=api_key)
+    print(f"openai key {api_key}")
+    client = OpenAI(api_key=api_key, base_url = "https://api.openai.com/v1")
     retries = 0
     while retries < max_retries:
         try:

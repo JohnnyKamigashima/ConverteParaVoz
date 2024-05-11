@@ -1,4 +1,4 @@
-""" Fonctions to work with Amazon Polly
+""" Functions to work with Amazon Polly
 """
 
 import boto3
@@ -8,7 +8,7 @@ def polly_speak(
     extension = '.txt',
     voice_id = 'Camila',
     language_code = 'pt-BR',
-    output_format = 'mp3'
+    output_format = 'ogg',
     ):
 
     """

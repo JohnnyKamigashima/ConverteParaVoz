@@ -8,7 +8,6 @@ from library.open_ai import query_openai, write_response
 from library.telegram_bot import audio_send, telegram_bot_sendtext
 from library.text import limpa_titulo, limpar_linhas_vazias, remove_emojis, adicionar_quebras_de_linha, substituir_quebras_de_linha
 from library.polly_speak import polly_speak
-from openai import OpenAI
 
 with open('../.openapi_credentials', encoding='utf-8') as f:
     contents = f.read()
@@ -16,8 +15,8 @@ API_KEY: str = ''
 BOT_TOKEN: str = ''
 
 for line in contents.split('\n'):
-    if line.startswith('api_key='):
-        API_KEY: str = line[len('api_key='):]
+    if line.startswith('openai_api_key='):
+        API_KEY: str = line[len('openai_api_key='):]
     elif line.startswith('bot_token='):
         BOT_TOKEN: str = line[len('bot_token='):]
 
@@ -32,7 +31,7 @@ for line in contents.split('\n'):
 # region=us-east-1
 
 # Models: text-davinci-003,text-curie-001,text-babbage-001,text-ada-001
-MODEL = 'gpt-3.5-turbo-1106'
+MODEL = 'gpt-3.5-turbo'
 
 # Defining the bot's personality using adjectives
 bot_personality = 'Reescreva o texto a seguir em português do Brasil, corrigindo com pontuação correta para uma melhor leitura em formato JSON'
