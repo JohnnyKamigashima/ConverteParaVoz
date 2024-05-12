@@ -8,7 +8,7 @@ def polly_speak(
     extension = '.txt',
     voice_id = 'Camila',
     language_code = 'pt-BR',
-    output_format = 'ogg',
+    output_format = 'mp3',
     ):
 
     """

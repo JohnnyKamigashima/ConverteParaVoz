@@ -20,7 +20,6 @@ def open_ai(system, prompt, api_key, model, max_retries=3) -> str:
     Returns:
         str: The final result from the API response.
     """
-    print(f"openai key {api_key}")
     client = OpenAI(api_key=api_key, base_url = "https://api.openai.com/v1")
     retries = 0
     while retries < max_retries:
