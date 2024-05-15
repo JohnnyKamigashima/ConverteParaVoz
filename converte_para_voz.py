@@ -31,7 +31,7 @@ for line in contents.split('\n'):
 # region=us-east-1
 
 # Models: text-davinci-003,text-curie-001,text-babbage-001,text-ada-001
-MODEL = 'gpt-3.5-turbo'
+MODEL = 'gpt-4o'
 
 # Defining the bot's personality using adjectives
 bot_personality = 'Reescreva o texto a seguir em português do Brasil, corrigindo com pontuação correta para uma melhor leitura em formato JSON'
