@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Johnny Kamigashima <johnny@jhk.app>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -12,7 +13,6 @@ telebot = "^0.0.5"
 openai = "^1.28.1"
 unidecode = "^1.3.8"
 boto3 = "^1.34.103"
-
 
 [build-system]
 requires = ["poetry-core"]

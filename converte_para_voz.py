@@ -31,10 +31,10 @@ for line in contents.split('\n'):
 # region=us-east-1
 
 # Models: text-davinci-003,text-curie-001,text-babbage-001,text-ada-001
-MODEL = 'gpt-4o'
+MODEL = 'gpt-4o-mini'
 
 # Defining the bot's personality using adjectives
-bot_personality = 'Reescreva o texto a seguir em português do Brasil, corrigindo com pontuação correta para uma melhor leitura em formato JSON'
+bot_personality = 'Traduza o texto para português do Brasil, corrigindo com pontuação correta para uma melhor leitura, detalhando cada idéia mencionada no texto de forma clara e simples que qualquer pessoa leiga consiga entender. Se houver trechos de códigos, descreve a funcionalidade do código e o resultado gerado por ele.'
 
 # Define response file
 RESPONSE_BASE_FILE = './responses/responseGPT'
@@ -68,7 +68,7 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
         telegram_bot_sendtext(prompts, chat_id,chat_token)
 
     if contador_linhas >= 1:
-        prompt_list: list[str] = prompts.split('\n')
+        prompt_list: list[str] = prompts.split('\n\n')
         titulo_texto: str = ''
         mp3_file: str = ''
         ogg_file: str = ''
