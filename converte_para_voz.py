@@ -35,7 +35,7 @@ for line in contents.split('\n'):
 MODEL = 'gpt-4o-mini'
 
 # Defining the bot's personality using adjectives
-bot_personality = 'Traduza o texto para português do Brasil, corrigindo com pontuação correta para uma melhor leitura, detalhando cada idéia mencionada no texto de forma clara e simples que qualquer pessoa leiga consiga entender. Se houver trechos de códigos, descreva a funcionalidade do código e o resultado gerado por ele e remova os trechos de código '
+bot_personality = 'Traduza o texto para português do Brasil, corrigindo com pontuação correta para uma melhor leitura, detalhando cada idéia mencionada no texto de forma clara e simples que qualquer pessoa leiga consiga entender sem inventar novas idéias nem criar novos sentidos. Se houver trechos de códigos, descreva a funcionalidade do código e o resultado gerado por ele e remova os trechos de código '
 
 # Define response file
 RESPONSE_BASE_FILE = './responses/responseGPT'
