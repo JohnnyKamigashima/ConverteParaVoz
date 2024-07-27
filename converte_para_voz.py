@@ -84,6 +84,7 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
         titulo_texto, mp3_file, ogg_file = \
             generate_reponse(api_key, lista_arquivos_audio, lista_respostas, prompt_list)
 
+        print(f'Arquivos da lista de arquivos de audio:\n {lista_arquivos_audio}:\n')
         merge_mp3_files(lista_arquivos_audio, mp3_file)
         convert_mp3_ogg(mp3_file, ogg_file)
         telegram_bot_sendtext(titulo_texto, chat_id, chat_token)
@@ -114,17 +115,17 @@ def generate_reponse(api_key, lista_arquivos_audio, lista_respostas, prompt_list
             bot_response: str = \
                     query_openai(prompt, MODEL, api_key, BOT_PERSONALITY, TEXTO_INDESEJADO)
 
-            print('\nRESPONSE => ' + bot_response)
             process_response(lista_arquivos_audio, lista_respostas, response_file, bot_response)
     return titulo_texto,mp3_file,ogg_file
 
 def process_response(lista_arquivos_audio, lista_respostas, response_file, bot_response):
-    bot_response_byline = bot_response.split('\n')
+    bot_response_byline = bot_response.split('. .')
 
-    for response_line in bot_response_byline:
-        write_response(response_file, response_line)
-        lista_respostas.append(response_file + '.txt')
-        lista_arquivos_audio.append(polly_speak(response_file))
+    for index, response_line in enumerate(bot_response_byline):
+        new_response_file = response_file + '_R_'+ str(index)
+        write_response(new_response_file, response_line)
+        lista_respostas.append(new_response_file+ '.txt')
+        lista_arquivos_audio.append(polly_speak(new_response_file))
 
 while True:
     with open(QUEUE_FILE, 'r', encoding='utf-8') as p_file:
@@ -137,7 +138,6 @@ while True:
     if len(sys.argv) < 2:
         print("No argument provided, using queue.txt list.")
         prompt_file = lines[0].strip()
-        print(prompt_file)
 
         if prompt_file != '' and os.path.exists(prompt_file):
             main(prompt_file, CHAT_ID, BOT_TOKEN, API_KEY)
