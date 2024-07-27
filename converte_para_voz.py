@@ -7,7 +7,9 @@ from library.merge_mp3_files import convert_mp3_ogg, merge_mp3_files
 from library.open_ai import query_openai, write_response
 from library.splitString import divide_frases
 from library.telegram_bot import audio_send, telegram_bot_sendtext
-from library.text import limpa_titulo, limpar_linhas_vazias, remove_emojis, adicionar_quebras_de_linha, substituir_quebras_de_linha
+from library.text import \
+    limpa_titulo, limpar_linhas_vazias, remove_emojis,\
+        adicionar_quebras_de_linha, substituir_quebras_de_linha
 from library.polly_speak import polly_speak
 
 with open('../.openapi_credentials', encoding='utf-8') as f:
@@ -35,7 +37,12 @@ for line in contents.split('\n'):
 MODEL = 'gpt-4o-mini'
 
 # Defining the bot's personality using adjectives
-bot_personality = 'Traduza o texto para português do Brasil, corrigindo com pontuação correta para uma melhor leitura, detalhando cada idéia mencionada no texto de forma clara e simples que qualquer pessoa leiga consiga entender sem inventar novas idéias nem criar novos sentidos. Se houver trechos de códigos, descreva a funcionalidade do código e o resultado gerado por ele e remova os trechos de código '
+BOT_PERSONALITY = 'Traduza o texto para português do Brasil, \
+    corrigindo com pontuação correta para uma melhor leitura, \
+        detalhando cada idéia mencionada no texto de forma clara e simples que qualquer pessoa leiga consiga entender sem inventar novas idéias nem criar novos sentidos. \
+            Se houver trechos de códigos, descreva a funcionalidade do código e o resultado gerado por ele e remova os trechos de código.\
+                  Se houver cabeçalhos, indices e outros elementos que sejam irrelevantes para o entendimento do contexto, \
+                    remova antes de traduzir. '
 
 # Define response file
 RESPONSE_BASE_FILE = './responses/responseGPT'
@@ -49,7 +56,7 @@ TEXTO_INDESEJADO: list[str] = [
     'Reescreva em português do Brasil, corrigindo com pontuação correta para uma melhor leitura',
     'Reescrevendo com pontuação correta:',
     'Reescrevendo em português do Brasil, com a pontuação correta para uma melhor leitura:',
-    bot_personality
+    BOT_PERSONALITY
     ]
 
 def main(prompt_from_file, chat_id, chat_token, api_key):
@@ -61,7 +68,7 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
     with open(prompt_from_file, "r", encoding="utf-8") as file:
         prompts = limpar_linhas_vazias(remove_emojis(file.read().strip()))
         prompts = adicionar_quebras_de_linha(substituir_quebras_de_linha(prompts,200),400)
-        contador_linhas = len(prompts.split('\n'))
+        contador_linhas = len(prompts.split('\n\n'))
         lista_arquivos_audio = []
         lista_respostas = []
 
@@ -74,22 +81,8 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
         mp3_file: str = ''
         ogg_file: str = ''
 
-        for index, prompt in enumerate(prompt_list):
-            string_formatada: str = f"{index:03d}"
-            response_file: str = RESPONSE_BASE_FILE + str(string_formatada)
-
-            if len(prompt) > 10:
-                if index == 0:
-                    titulo_texto: str = limpa_titulo(prompt, 30)
-                    mp3_file = AUDIO_OUTPUT_PATH + titulo_texto + '.' + AUDIO_EXTENSION
-                    ogg_file = AUDIO_OUTPUT_PATH + titulo_texto + '.' + 'ogg'
-                bot_response: str = query_openai(prompt, MODEL, api_key, bot_personality, TEXTO_INDESEJADO)
-
-                print('\nRESPONSE => ' + bot_response)
-
-                write_response(response_file, bot_response)
-                lista_respostas.append(response_file + '.txt')
-                lista_arquivos_audio.append(polly_speak(response_file))
+        titulo_texto, mp3_file, ogg_file = \
+            generate_reponse(api_key, lista_arquivos_audio, lista_respostas, prompt_list)
 
         merge_mp3_files(lista_arquivos_audio, mp3_file)
         convert_mp3_ogg(mp3_file, ogg_file)
@@ -108,7 +101,30 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
         remove_files(lista_respostas)
         remove_files([mp3_file, ogg_file])
 
-        bot_response = ""
+def generate_reponse(api_key, lista_arquivos_audio, lista_respostas, prompt_list):
+    for index, prompt in enumerate(prompt_list):
+        string_formatada: str = f"{index:03d}"
+        response_file: str = RESPONSE_BASE_FILE + str(string_formatada)
+
+        if len(prompt) > 10:
+            if index == 0:
+                titulo_texto: str = limpa_titulo(prompt, 30)
+                mp3_file = AUDIO_OUTPUT_PATH + titulo_texto + '.' + AUDIO_EXTENSION
+                ogg_file = AUDIO_OUTPUT_PATH + titulo_texto + '.' + 'ogg'
+            bot_response: str = \
+                    query_openai(prompt, MODEL, api_key, BOT_PERSONALITY, TEXTO_INDESEJADO)
+
+            print('\nRESPONSE => ' + bot_response)
+            process_response(lista_arquivos_audio, lista_respostas, response_file, bot_response)
+    return titulo_texto,mp3_file,ogg_file
+
+def process_response(lista_arquivos_audio, lista_respostas, response_file, bot_response):
+    bot_response_byline = bot_response.split('\n')
+
+    for response_line in bot_response_byline:
+        write_response(response_file, response_line)
+        lista_respostas.append(response_file + '.txt')
+        lista_arquivos_audio.append(polly_speak(response_file))
 
 while True:
     with open(QUEUE_FILE, 'r', encoding='utf-8') as p_file:
@@ -136,4 +152,4 @@ while True:
             main(prompt_file, CHAT_ID, BOT_TOKEN, API_KEY)
             os.remove(prompt_file)
         break
-    
+
