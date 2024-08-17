@@ -128,28 +128,16 @@ def process_response(lista_arquivos_audio, lista_respostas, response_file, bot_r
         lista_arquivos_audio.append(polly_speak(new_response_file))
 
 while True:
-    with open(QUEUE_FILE, 'r', encoding='utf-8') as p_file:
-        lines = p_file.readlines()
+    # Get all .txt files in the current directory
+    txt_files = [f for f in os.listdir() if f.endswith('.txt')]
 
-    if len(lines) == 0:
-        print("The queue file is empty. Exiting the program.")
+    if len(txt_files) == 0:
+        print("No .txt files found in the current directory. Exiting the program.")
         break
 
-    if len(sys.argv) < 2:
-        print("No argument provided, using queue.txt list.")
-        prompt_file = lines[0].strip()
-
+    for prompt_file in txt_files:
         if prompt_file != '' and os.path.exists(prompt_file):
             main(prompt_file, CHAT_ID, BOT_TOKEN, API_KEY)
             os.remove(prompt_file)
-
-        with open(QUEUE_FILE, 'w', encoding='utf-8') as p_file:
-            p_file.writelines(lines[1:])
-
-    else:
-        prompt_file = sys.argv[1]
-        if prompt_file != '' and os.path.exists(prompt_file):
-            main(prompt_file, CHAT_ID, BOT_TOKEN, API_KEY)
-            os.remove(prompt_file)
-        break
+            
 
