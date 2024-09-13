@@ -140,4 +140,3 @@ while True:
             main(prompt_file, CHAT_ID, BOT_TOKEN, API_KEY)
             os.remove(prompt_file)
             
-
