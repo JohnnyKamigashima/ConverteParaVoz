@@ -54,7 +54,7 @@ def open_ai(system, prompt, api_key, model, max_retries=3) -> str:
 
             # final_result = concatenated_values.rstrip()
 
-            return result 
+            return result  # type: ignore
         except HTTPError as error:
             # Handle specific HTTP errors here
             print(f"HTTP Error occurred: {error}")

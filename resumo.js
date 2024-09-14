@@ -1,10 +1,13 @@
 const { PollyClient, SynthesizeSpeechCommand } = require('@aws-sdk/client-polly')
 const fs = require('fs')
 const path = require('path')
+// @ts-ignore
 const player = require('play-sound')((opts = {}))
 require('dotenv').config({ path: '../.aws/credentials' })
 const { promisify } = require('util')
+const { getChatGPTResponse } = require('./getChatGPTResponse')
 const unlink = promisify(fs.unlink)
+const ffmpeg = require("fluent-ffmpeg")
 
 // Função para obter todos os arquivos `.cpb` na pasta
 async function getFilesInDirectory(directory) {
@@ -25,7 +28,7 @@ async function processFilesInDirectory(directory) {
         const filePath = path.join(directory, file)
         try {
             // Lê o conteúdo do arquivo
-            const content = await readFileSync(filePath, 'utf8')
+            const content = await readFileSync(filePath)
             // Processa o arquivo com o conteúdo
             await askChatGPTAndSpeak(content)
             // Deleta o arquivo após processamento
@@ -37,9 +40,8 @@ async function processFilesInDirectory(directory) {
     // }
 }
 
-const aiToken = process.env.OPENAI
-
 // Configura o cliente Polly
+// @ts-ignore
 const pollyClient = new PollyClient({
     region: process.env.region,
     credentials: {
@@ -59,51 +61,17 @@ function readFileSync(filePath) {
     }
 }
 
-// Função para fazer a requisição ao ChatGPT e retornar a resposta
-async function getChatGPTResponse(question) {
-    const apiKey = aiToken // Substitua pela sua chave da OpenAI
-    const apiUrl = 'https://api.openai.com/v1/chat/completions'
-
-    const data = {
-        model: "gpt-4", // Corrigido para um modelo válido
-        messages: [
-            { role: "system", content: "Resuma o texto para portugues do Brasil, deixando as ideias claras e mencionando a fonte no final quando houver." },
-            { role: "user", content: question }
-        ],
-        max_tokens: 150, // Limite de tokens da resposta
-        temperature: 0.5
-    }
-
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify(data)
-        })
-
-        const result = await response.json()
-        const chatResponse = result.choices[0].message.content
-        return chatResponse
-    } catch (error) {
-        console.error("Erro ao buscar a resposta do ChatGPT:", error)
-        return "Desculpe, houve um erro ao tentar obter a resposta."
-    }
-}
-
-// Função para converter texto em áudio usando Amazon Polly e tocar no Node.js
-async function textToSpeech(text, speed = 'fast') {
+async function textToSpeech(text) {
     const params = {
-        TextType: "ssml", // Informa que estamos usando SSML
-        Text: `<speak><prosody rate="${speed}">${text}</prosody></speak>`,
+        TextType: "text", // Usando texto simples
+        Text: text, // Texto a ser sintetizado
         OutputFormat: "mp3",
         VoiceId: "Camila", // Voz em português brasileiro
         LanguageCode: "pt-BR"
     }
 
     try {
+        // @ts-ignore
         const command = new SynthesizeSpeechCommand(params)
         const result = await pollyClient.send(command)
         const audioData = result.AudioStream
@@ -115,17 +83,32 @@ async function textToSpeech(text, speed = 'fast') {
         const fileStream = fs.createWriteStream(filePath)
 
         // Escreve o áudio no arquivo
+        // @ts-ignore
         audioData.pipe(fileStream)
 
-        fileStream.on('finish', () => {
-            // Reproduz o arquivo de áudio
-            player.play(filePath, (err) => {
-                if (err) console.error("Erro ao reproduzir o áudio:", err)
-                else {
-                    console.log("Reproduzindo áudio...")
-                    unlink(filePath) // Deleta o arquivo de áudio
-                }
-            })
+        fileStream.on('finish', async () => {
+            const modified = filePath.replace('.mp3', '_modified.mp3')
+
+            // Aumenta a velocidade de reprodução do áudio para 2x
+            ffmpeg(filePath)
+                .audioFilter('atempo=1.75') // Aumenta a velocidade para 2x
+                .save(modified)
+                .on('end', () => {
+                    // Reproduz o arquivo de áudio modificado
+                    player.play(modified, (err) => {
+                        if (err) console.error("Erro ao reproduzir o áudio:", err)
+                        else {
+                            console.log("Reproduzindo áudio em velocidade 2x...")
+                            unlink(filePath) // Deleta o arquivo de áudio modificado
+                            unlink(modified) // Deleta o arquivo de áudio 
+                                .catch(err => console.error("Erro ao deletar o arquivo:", err))
+                        }
+                    })
+                })
+                .on('error', (err) => {
+                    console.error("Erro ao modificar o áudio:", err)
+                })
+
         })
 
         fileStream.on('error', (err) => {
@@ -152,3 +135,5 @@ async function main() {
 
 // Executa a função main
 main().catch(err => console.error("Erro ao executar a função main:", err))
+
+module.exports = { askChatGPTAndSpeak }
