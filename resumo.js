@@ -41,7 +41,12 @@ const aiToken = process.env.OPENAI
 
 // Configura o cliente Polly
 const pollyClient = new PollyClient({
-    region: process.env.region // Substitua pela região que você está utilizando
+    region: process.env.region,
+    credentials: {
+        accessKeyId: process.env.aws_access_key_id,
+        secretAccessKey: process.env.aws_secret_access_key,
+    },
+
 })
 
 function readFileSync(filePath) {
