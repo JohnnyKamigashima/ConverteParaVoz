@@ -3,6 +3,39 @@ const fs = require('fs')
 const path = require('path')
 const player = require('play-sound')((opts = {}))
 require('dotenv').config({ path: '../.aws/credentials' })
+const { promisify } = require('util')
+const unlink = promisify(fs.unlink)
+
+// Função para obter todos os arquivos `.cpb` na pasta
+async function getFilesInDirectory(directory) {
+    try {
+        const files = await fs.promises.readdir(directory)
+        return files.filter(file => file.endsWith('.cpb'))
+    } catch (error) {
+        console.error('Erro ao listar arquivos no diretório:', error)
+        return []
+    }
+}
+
+// Função para processar cada arquivo `.cpb`
+async function processFilesInDirectory(directory) {
+    const files = await getFilesInDirectory(directory)
+    const file = files[0]
+    // for (const file of files) {
+        const filePath = path.join(directory, file)
+        try {
+            // Lê o conteúdo do arquivo
+            const content = await readFileSync(filePath, 'utf8')
+            // Processa o arquivo com o conteúdo
+            await askChatGPTAndSpeak(content)
+            // Deleta o arquivo após processamento
+            await unlink(filePath)
+            console.log(`Arquivo ${file} processado e excluído.`)
+        } catch (error) {
+            console.error(`Erro ao processar o arquivo ${file}:`, error)
+        }
+    // }
+}
 
 const aiToken = process.env.OPENAI
 
@@ -29,7 +62,7 @@ async function getChatGPTResponse(question) {
     const data = {
         model: "gpt-4", // Corrigido para um modelo válido
         messages: [
-            { role: "system", content: "Resuma o texto deixando as ideias claras em tópicos numerados de forma que possa ser convertida para voz." },
+            { role: "system", content: "Resuma o texto para portugues do Brasil, deixando as ideias claras e mencionando a fonte no final quando houver." },
             { role: "user", content: question }
         ],
         max_tokens: 150, // Limite de tokens da resposta
@@ -71,7 +104,7 @@ async function textToSpeech(text, speed = 'fast') {
         const audioData = result.AudioStream
 
         // Caminho temporário para salvar o arquivo de áudio
-        const filePath = path.join(__dirname, 'output.mp3')
+        const filePath = path.join(__dirname, Math.floor(Math.random() * 10000) + '.mp3')
 
         // Cria um fluxo de escrita para o arquivo
         const fileStream = fs.createWriteStream(filePath)
@@ -83,7 +116,10 @@ async function textToSpeech(text, speed = 'fast') {
             // Reproduz o arquivo de áudio
             player.play(filePath, (err) => {
                 if (err) console.error("Erro ao reproduzir o áudio:", err)
-                else console.log("Reproduzindo áudio...")
+                else {
+                    console.log("Reproduzindo áudio...")
+                    unlink(filePath) // Deleta o arquivo de áudio
+                }
             })
         })
 
@@ -104,11 +140,9 @@ async function askChatGPTAndSpeak(question) {
 }
 
 async function main() {
-    // Recebe o argumento da linha de comando
-    const filename = 'clipboard.cpb'
+    const directory = __dirname // Define o diretório onde os arquivos `.cpb` estão localizados
+    await processFilesInDirectory(directory);
 
-    // Executa a função principal
-    await askChatGPTAndSpeak(readFileSync(filename))
 }
 
 // Executa a função main
