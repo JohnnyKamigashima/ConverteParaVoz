@@ -42,7 +42,7 @@ BOT_PERSONALITY = 'Resuma o texto para português do Brasil, \
         detalhando cada idéia mencionada no texto de forma clara e simples que qualquer pessoa leiga consiga entender sem inventar novas idéias nem criar novos sentidos. \
             Se houver trechos de códigos, descreva a funcionalidade do código e o resultado gerado por ele e remova os trechos de código.\
                   Se houver cabeçalhos, indices e outros elementos que sejam irrelevantes para o entendimento do contexto, \
-                    remova antes de traduzir. '
+                    remova antes de traduzir. Se houver links, cite-os como fonte mas nao acesse nem resuma seu conteudo'
 
 # Define response file
 RESPONSE_BASE_FILE = './responses/responseGPT'
