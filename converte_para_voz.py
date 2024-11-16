@@ -2,6 +2,7 @@
 """
 import os
 import sys
+from library.PlayHT import play_ht
 from library.copy_file import remove_files
 from library.merge_mp3_files import convert_mp3_ogg, merge_mp3_files
 from library.open_ai import query_openai, write_response
@@ -38,11 +39,14 @@ MODEL = 'gpt-4o-mini'
 
 # Defining the bot's personality using adjectives
 BOT_PERSONALITY = 'Resuma o texto para português do Brasil, \
-    corrigindo com pontuação correta para uma melhor leitura, \
-        detalhando cada idéia mencionada no texto de forma clara e simples que qualquer pessoa leiga consiga entender sem inventar novas idéias nem criar novos sentidos. \
+     de forma que seja como um roteiro para um ancora de noticiário, adicionando tags SSML para incluir expressividade e pausas.  \
+        Detalhe cada idéia mencionada no texto de forma clara e simples que qualquer pessoa leiga consiga entender sem inventar novas idéias nem criar novos sentidos. \
             Se houver trechos de códigos, descreva a funcionalidade do código e o resultado gerado por ele e remova os trechos de código.\
                   Se houver cabeçalhos, indices e outros elementos que sejam irrelevantes para o entendimento do contexto, \
-                    remova antes de traduzir. Se houver links, cite-os como fonte mas nao acesse nem resuma seu conteudo'
+                    remova antes de traduzir. \
+                        Não tente acessar links, cite-os como fonte mas nao acesse nem resuma seu conteudo.\
+                    As tags disponiveis SSML são:\
+                <break time="3s"/> para pausas,   <lang> para espeficiar linguas estrangeiras tais como frances:  <lang xml:lang="fr-FR">Je ne parle pas français.</lang>, <p> para adicionar pausas entre parágrafos exemplo  <p>This is the second paragraph.</p> , <sub> para acronimos e abreviações tal como <sub alias="Mercurio">Hg</sub>.'
 
 # Define response file
 RESPONSE_BASE_FILE = './responses/responseGPT'
@@ -126,6 +130,7 @@ def process_response(lista_arquivos_audio, lista_respostas, response_file, bot_r
         write_response(new_response_file, response_line)
         lista_respostas.append(new_response_file+ '.txt')
         lista_arquivos_audio.append(polly_speak(new_response_file))
+        # lista_arquivos_audio.append(play_ht(new_response_file))
 
 while True:
     # Get all .txt files in the current directory
@@ -139,4 +144,4 @@ while True:
         if prompt_file != '' and os.path.exists(prompt_file):
             main(prompt_file, CHAT_ID, BOT_TOKEN, API_KEY)
             os.remove(prompt_file)
-            
+
