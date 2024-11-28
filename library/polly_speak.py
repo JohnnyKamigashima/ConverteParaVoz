@@ -34,7 +34,7 @@ def polly_speak(
     # Synthesize the text into speech using the Polly API's synthesize_speech() method
     response = polly_client.synthesize_speech(
         OutputFormat=output_format,
-        Text=text,
+        Text=  text  ,
         VoiceId=voice_id,
         LanguageCode=language_code,
         Engine=engine
