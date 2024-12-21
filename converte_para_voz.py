@@ -24,7 +24,7 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
     with open(prompt_from_file, "r", encoding="utf-8") as file:
         prompts = limpar_linhas_vazias(remove_emojis(file.read().strip()))
         prompts = adicionar_quebras_de_linha(substituir_quebras_de_linha(prompts,200),400)
-        contador_linhas = len(prompts.split('\n\n'))
+        contador_linhas = len(prompts.split('.\n\n'))
         lista_arquivos_audio = []
         lista_respostas = []
 

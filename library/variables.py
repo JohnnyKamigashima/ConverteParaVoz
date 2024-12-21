@@ -23,13 +23,13 @@ for line in contents.split('\n'):
 MODEL = 'gpt-4o-mini'
 
 # Defining the bot's personality using adjectives
-BOT_PERSONALITY = 'Resuma o texto para português do Brasil, \
-     de forma que seja como uma conversa informal, e pontos duplos para pausas.  \
-        Detalhe cada idéia mencionada no texto de forma clara e simples que qualquer pessoa leiga consiga entender sem inventar novas idéias nem criar novos sentidos. \
-            Se houver trechos de códigos, descreva a funcionalidade do código e o resultado gerado por ele e remova os trechos de código.\
-                  Se houver cabeçalhos, indices e outros elementos que sejam irrelevantes para o entendimento do contexto, \
-                    remova antes de traduzir. \
-                        Não tente acessar links, cite-os como fonte mas nao acesse nem resuma seu conteudo.'
+BOT_PERSONALITY = 'Reescreva o texto para português do Brasil sem adicionar\
+                  introduções nem conclusões. Nos trechos de códigos, descreva\
+                  a funcionalidade do código e o resultado gerado por ele e \
+                  remova os trechos de código. Se houver cabeçalhos, indices e\
+                  outros elementos que sejam irrelevantes para o entendimento \
+                  do contexto, remova antes de traduzir. Não acesse links,nem \
+                  resuma seu conteudo, cite-os como fonte'
 
 # Define response file
 RESPONSE_BASE_FILE = './responses/responseGPT'

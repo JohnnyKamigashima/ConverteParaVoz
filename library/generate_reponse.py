@@ -5,7 +5,7 @@ from library.process_response import process_response
 
 def generate_reponse(api_key, prompt_list):
     lista_arquivos_audio_final = []
-    lista_respostas = []
+    lista_resposta_final = []
     mp3_file = ''
     ogg_file = ''
 
@@ -13,6 +13,7 @@ def generate_reponse(api_key, prompt_list):
         string_formatada: str = f"{index:03d}"
         response_file: str = RESPONSE_BASE_FILE + str(string_formatada)
         lista_arquivos_audio = []
+        lista_respostas = []
 
         if len(prompt) > 10:
             if index == 0:
@@ -24,5 +25,6 @@ def generate_reponse(api_key, prompt_list):
 
             lista_arquivos_audio, lista_respostas = process_response(response_file, bot_response)
             lista_arquivos_audio_final.extend(lista_arquivos_audio)
+            lista_resposta_final.extend(lista_respostas)
 
-    return titulo_texto,mp3_file,ogg_file, lista_arquivos_audio_final, lista_respostas
+    return titulo_texto,mp3_file,ogg_file, lista_arquivos_audio_final, lista_resposta_final
