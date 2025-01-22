@@ -5,6 +5,7 @@ from library.generate_reponse import generate_reponse
 from library.adicionar_quebras_de_linha import adicionar_quebras_de_linha
 from library.audio_send import audio_send
 from library.convert_mp3_ogg import convert_mp3_ogg
+from library.le_arquivo_texto import le_arquivo_texto
 from library.remove_emojis import remove_emojis
 from library.remove_files import remove_files
 from library.merge_mp3_files import merge_mp3_files
@@ -50,6 +51,7 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
         for fi in lista_arquivos_audio:
             print(fi)
         for fi in lista_respostas:
+            telegram_bot_sendtext(le_arquivo_texto(fi), chat_id, chat_token)
             print(fi)
         print(mp3_file)
         print(ogg_file)
