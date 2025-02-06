@@ -23,7 +23,7 @@ def generate_reponse(api_key, prompt_list):
             bot_response: str = \
                     query_openai(prompt, MODEL, api_key, BOT_PERSONALITY, TEXTO_INDESEJADO)
 
-            lista_arquivos_audio, lista_respostas = process_response(response_file, bot_response)
+            lista_arquivos_audio, lista_respostas = process_response(api_key,response_file, bot_response)
             lista_arquivos_audio_final.extend(lista_arquivos_audio)
             lista_resposta_final.extend(lista_respostas)
 
