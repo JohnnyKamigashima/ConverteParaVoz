@@ -51,7 +51,7 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
         remove_files([mp3_file, ogg_file])
 
 while True:
-    txt_files = [f for f in os.listdir() if f.endswith('.txt')]
+    txt_files = sorted([f for f in os.listdir() if f.endswith('.txt')])
 
     if len(txt_files) == 0:
         print("No .txt files found in the current directory. Exiting the program.")
