@@ -8,7 +8,7 @@ def openai_speak(
     response_file,
     extension = '.txt',
     voice_id = 'nova',
-    model = 'tts-1-hd',
+    model = 'tts-1',
     output_format = 'mp3',
     ):
 
@@ -22,7 +22,6 @@ def openai_speak(
         input=text,
     )
 
-    # Save the synthesized audio to a file
     audio_file = response_file + '.' + output_format
     response.stream_to_file(audio_file)
 

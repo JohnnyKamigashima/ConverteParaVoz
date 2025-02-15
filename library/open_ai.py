@@ -24,10 +24,8 @@ def open_ai(system, prompt, api_key, model, max_retries=3) -> str:
     retries = 0
     while retries < max_retries:
         try:
-            # This code is for v1 of the openai package: pypi.org/project/openai
             response = client.chat.completions.create(
                 model=model,
-                # response_format={"type": "json_object"},
                 messages=[
                     {
                         "role": "system",
@@ -38,37 +36,21 @@ def open_ai(system, prompt, api_key, model, max_retries=3) -> str:
                         "content": f"{prompt}"
                     }
                 ],
-                # temperature=1,
-                # max_tokens=256,
-                # top_p=1,
-                # frequency_penalty=0,
-                # presence_penalty=0
             )
             result = response.choices[0].message.content
             print(f"Resposta: {result}")
-            # result_json = json.loads(result)
-            # concatenated_values = ''
 
-            # for key, value in result_json.items():
-            #     concatenated_values += str(value) + '\n'
-
-            # final_result = concatenated_values.rstrip()
-
-            return result  # type: ignore
+            return result
         except HTTPError as error:
-            # Handle specific HTTP errors here
             print(f"HTTP Error occurred: {error}")
             retries += 1
         except requests.exceptions.RequestException as error:
-            # Handle other request-related errors here
             print(f"Request Exception occurred: {error}")
             retries += 1
         except json.decoder.JSONDecodeError as error:
-            # Handle JSON decoding errors here
             print(f"JSON Decode Error occurred: {error}")
             retries += 1
         except AttributeError as error:
-            # Handle attribute errors here
             print(f"Attribute Error occurred: {error}")
             retries += 1
     return ''

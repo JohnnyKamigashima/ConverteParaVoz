@@ -21,17 +21,13 @@ def polly_speak(
         str: The path to the generated speech audio file.
     """
 
-    # Create an instance of the Polly API client
     polly_client = boto3.client('polly')
 
-    # Set voice and language settings
     engine = 'neural'
 
-    # Read the text to be synthesized from the file
     with open(response_file + extension, "r", encoding="utf-8") as file:
         text = file.read()
 
-    # Synthesize the text into speech using the Polly API's synthesize_speech() method
     response = polly_client.synthesize_speech(
         OutputFormat=output_format,
         Text=  text  ,
@@ -40,7 +36,6 @@ def polly_speak(
         Engine=engine
     )
 
-    # Save the synthesized audio to a file
     audio_file = response_file + '.' + output_format
     with open(audio_file, 'wb') as file:
         file.write(response['AudioStream'].read())

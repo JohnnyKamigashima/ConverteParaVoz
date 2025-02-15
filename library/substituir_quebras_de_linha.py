@@ -10,16 +10,12 @@ def substituir_quebras_de_linha(texto, caracteres):
         Returns:
             str: The processed text with line breaks substituted.
     """
-    # Adicionar ponto final no final de cada frase
     texto = texto.replace(". ", ".\n")
 
-    # Substituir quebra de linha simples por espaço
     texto = texto.replace("\n", " ")
 
-    # Substituir duas quebras de linha por uma quebra única
     texto = texto.replace("\n\n", "\n")
 
-    # Remover quebras de linha quando a linha tiver menos de 200 caracteres
     linhas = texto.split("\n")
     linhas_formatadas = []
     for linha in linhas:

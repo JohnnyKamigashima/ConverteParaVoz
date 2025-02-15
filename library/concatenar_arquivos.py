@@ -18,7 +18,3 @@ def concatenar_arquivos(lista_arquivos):
 
     return conteudo_concatenado
 
-# Exemplo de uso:
-# lista = ["arquivo1.txt", "arquivo2.txt", "arquivo3.txt"]
-# resultado = concatenar_arquivos(lista)
-# print(resultado)

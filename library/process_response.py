@@ -12,6 +12,5 @@ def process_response( api_key,response_file, bot_response):
         write_response(new_response_file, response_line)
         lista_respostas.append(new_response_file+ '.txt')
         lista_arquivos_audio.append(openai_speak( api_key,new_response_file))
-        # lista_arquivos_audio.append(polly_speak(new_response_file))
 
     return lista_arquivos_audio, lista_respostas

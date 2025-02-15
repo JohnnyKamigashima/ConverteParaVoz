@@ -13,8 +13,6 @@ def play_ht(response_file,extension = '.txt',
         text = file.read()
         options = TTSOptions(voice="s3://voice-cloning-zero-shot/775ae416-49bb-4fb6-bd45-740f205d20a1/jennifersaad/manifest.json")
         for chunk in client.tts(text, options):
-            # do something with the audio chunk
-               # Save the synthesized audio to a file
             audio_file = response_file + '.' + output_format
             with open(audio_file, 'wb') as file:
                 file.write(chunk)

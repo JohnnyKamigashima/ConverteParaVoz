@@ -29,7 +29,7 @@ BOT_PERSONALITY = 'Reescreva o texto para português do Brasil sem adicionar\
                   remova os trechos de código. Se houver cabeçalhos, indices e\
                   outros elementos que sejam irrelevantes para o entendimento \
                   do contexto, remova antes de traduzir. Não acesse links,nem \
-                  resuma seu conteudo, cite-os como fonte'
+                  resuma seu conteudo, cite-os como fonte. Mantenha as frases curtas e objetivas para facilitar a leitura.'
 
 # Define response file
 RESPONSE_BASE_FILE = './responses/responseGPT'
