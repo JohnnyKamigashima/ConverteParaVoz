@@ -1,13 +1,10 @@
-"""  Converte arquivo texto para voz usando Amazon Polly
-"""
 import os
 from library.generate_reponse import generate_reponse
 from library.adicionar_quebras_de_linha import adicionar_quebras_de_linha
 from library.audio_send import audio_send
 from library.convert_mp3_ogg import convert_mp3_ogg
-from library.le_arquivo_texto import le_arquivo_texto
 from library.remove_emojis import remove_emojis
-from library.remove_files import remove_files
+from library.remove_files import remove_all_files
 from library.merge_mp3_files import merge_mp3_files
 from library.substituir_quebras_de_linha import substituir_quebras_de_linha
 from library.splitString import divide_frases
@@ -17,10 +14,6 @@ from library.text import \
 from library.variables import API_KEY, BOT_TOKEN, CHAT_ID
 
 def main(prompt_from_file, chat_id, chat_token, api_key):
-    """
-    This is the main function of the program.
-    It reads prompts from a file and sends them to a Telegram chat.
-    """
     with open(prompt_from_file, "r", encoding="utf-8") as file:
         prompts = limpar_linhas_vazias(remove_emojis(file.read().strip()))
         prompts = adicionar_quebras_de_linha(substituir_quebras_de_linha(prompts,200),400)
@@ -37,18 +30,8 @@ def main(prompt_from_file, chat_id, chat_token, api_key):
         telegram_bot_sendtext(titulo_texto, chat_id, chat_token)
         audio_send(chat_id, ogg_file, chat_token )
 
-        print('Arquivos a serem removidos:\n')
-        for fi in lista_arquivos_audio:
-            print(fi)
-        for fi in lista_respostas:
-            telegram_bot_sendtext(le_arquivo_texto(fi), chat_id, chat_token)
-            print(fi)
-        print(mp3_file)
-        print(ogg_file)
+        remove_all_files(chat_id, chat_token, lista_arquivos_audio, lista_respostas, mp3_file, ogg_file)
 
-        remove_files(lista_arquivos_audio)
-        remove_files(lista_respostas)
-        remove_files([mp3_file, ogg_file])
 
 while True:
     txt_files = sorted([f for f in os.listdir() if f.endswith('.txt')])

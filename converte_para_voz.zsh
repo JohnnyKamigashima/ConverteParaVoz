@@ -1,11 +1,13 @@
-
-export PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
-cd "$(dirname "$0")"
-poetry shell
-poetry install
+# export PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+# cd "$(dirname "$0")"
+# poetry shell
+# poetry install
+# python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 
 while true
 do
-    poetry run python3 converte_para_voz.py
+    python converte_para_voz.py
     sleep 5
 done

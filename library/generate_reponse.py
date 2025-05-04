@@ -8,18 +8,18 @@ def generate_reponse(api_key, prompt_list):
     lista_resposta_final = []
     mp3_file = ''
     ogg_file = ''
+    ogg_extension = 'ogg'
+    titulo_comprimento = 125
 
     for index, prompt in enumerate(prompt_list):
         string_formatada: str = f"{index:03d}"
         response_file: str = RESPONSE_BASE_FILE + str(string_formatada)
-        lista_arquivos_audio = []
-        lista_respostas = []
 
         if len(prompt) > 10:
             if index == 0:
-                titulo_texto: str = limpa_titulo(prompt, 30)
+                titulo_texto: str = limpa_titulo(prompt, titulo_comprimento)
                 mp3_file = AUDIO_OUTPUT_PATH + titulo_texto + '.' + AUDIO_EXTENSION
-                ogg_file = AUDIO_OUTPUT_PATH + titulo_texto + '.' + 'ogg'
+                ogg_file = AUDIO_OUTPUT_PATH + titulo_texto + '.' + ogg_extension
             bot_response: str = \
                     query_openai(prompt, MODEL, api_key, BOT_PERSONALITY, TEXTO_INDESEJADO)
 
