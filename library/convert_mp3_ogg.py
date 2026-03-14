@@ -1,7 +1,7 @@
 from pydub import AudioSegment
 
 
-def convert_mp3_ogg(input_file:str ,output_file:str):
+def convert_mp3_ogg(input_file: str, output_file: str) -> str:
     """
     Converts an mp3 file to ogg format.
 
@@ -14,3 +14,4 @@ def convert_mp3_ogg(input_file:str ,output_file:str):
     """
     sound = AudioSegment.from_file(input_file, format="mp3")
     sound.export(output_file, format="ogg")
+    return output_file

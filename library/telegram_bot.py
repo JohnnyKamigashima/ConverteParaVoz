@@ -1,8 +1,11 @@
 """Funções de Telegram Bot
 """
+from typing import Any
+
 import requests
 
-def telegram_bot_sendtext(bot_message, chat_id, bot_token):
+
+def telegram_bot_sendtext(bot_message: str, chat_id: str, bot_token: str) -> dict[str, Any]:
     """
     Sends a text message to a Telegram bot.
 
@@ -17,8 +20,9 @@ def telegram_bot_sendtext(bot_message, chat_id, bot_token):
         'chat_id': chat_id,
         'text': bot_message
     }
+    api_url: str = f'https://api.telegram.org/bot{bot_token}/sendMessage'
     response = requests.post(
-        'https://api.telegram.org/bot' + bot_token + '/sendMessage',
+        api_url,
         json=data,
         timeout=60000
     )

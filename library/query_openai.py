@@ -1,7 +1,14 @@
 from library.open_ai import open_ai
+from collections.abc import Sequence
 
 
-def query_openai(prompt, model, api_key_value, bot_personality_value, texto_indesejado) -> str:
+def query_openai(
+    prompt: str,
+    model: str,
+    api_key_value: str,
+    bot_personality_value: str,
+    texto_indesejado: Sequence[str],
+) -> str:
     """
     Queries the OpenAI API with a given prompt and returns the bot's response.
 
@@ -26,7 +33,7 @@ def query_openai(prompt, model, api_key_value, bot_personality_value, texto_inde
     bot_response = bot_response.replace('\n', '. ').strip()
     bot_response = bot_response.replace('..', '.')
 
-    for i in texto_indesejado:
-        if i in bot_response:
-            bot_response = bot_response.replace(i, '')
+    for unwanted_text in texto_indesejado:
+        if unwanted_text in bot_response:
+            bot_response = bot_response.replace(unwanted_text, '')
     return bot_response

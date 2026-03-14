@@ -6,7 +6,8 @@ import requests
 from requests.exceptions import HTTPError
 from openai import OpenAI
 
-def open_ai(system, prompt, api_key, model, max_retries=3) -> str:
+
+def open_ai(system: str, prompt: str, api_key: str, model: str, max_retries: int = 3) -> str:
     """
     Improved version of the open_ai function.
 
@@ -20,8 +21,8 @@ def open_ai(system, prompt, api_key, model, max_retries=3) -> str:
     Returns:
         str: The final result from the API response.
     """
-    client = OpenAI(api_key=api_key, base_url = "https://api.openai.com/v1")
-    retries = 0
+    client = OpenAI(api_key=api_key, base_url="https://api.openai.com/v1")
+    retries: int = 0
     while retries < max_retries:
         try:
             response = client.chat.completions.create(
@@ -38,6 +39,8 @@ def open_ai(system, prompt, api_key, model, max_retries=3) -> str:
                 ],
             )
             result = response.choices[0].message.content
+            if result is None:
+                return ""
             print(f"Resposta: {result}")
 
             return result

@@ -3,13 +3,14 @@
 
 import boto3
 
+
 def polly_speak(
-    response_file,
-    extension = '.txt',
-    voice_id = 'Camila',
-    language_code = 'pt-BR',
-    output_format = 'mp3',
-    ):
+    response_file: str,
+    extension: str = '.txt',
+    voice_id: str = 'Camila',
+    language_code: str = 'pt-BR',
+    output_format: str = 'mp3',
+) -> str:
 
     """
     Generates a speech audio file using the Amazon Polly API.
@@ -23,10 +24,10 @@ def polly_speak(
 
     polly_client = boto3.client('polly')
 
-    engine = 'neural'
+    engine: str = 'neural'
 
     with open(response_file + extension, "r", encoding="utf-8") as file:
-        text = file.read()
+        text: str = file.read()
 
     response = polly_client.synthesize_speech(
         OutputFormat=output_format,
@@ -36,7 +37,7 @@ def polly_speak(
         Engine=engine
     )
 
-    audio_file = response_file + '.' + output_format
+    audio_file: str = response_file + '.' + output_format
     with open(audio_file, 'wb') as file:
         file.write(response['AudioStream'].read())
 

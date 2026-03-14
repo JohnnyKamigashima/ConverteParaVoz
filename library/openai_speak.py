@@ -3,18 +3,19 @@
 
 from openai import OpenAI
 
+
 def openai_speak(
-    token,
-    response_file,
-    extension = '.txt',
-    voice_id = 'nova',
-    model = 'tts-1',
-    output_format = 'mp3',
-    ):
+    token: str,
+    response_file: str,
+    extension: str = '.txt',
+    voice_id: str = 'nova',
+    model: str = 'tts-1',
+    output_format: str = 'mp3',
+) -> str:
 
     client = OpenAI(api_key=token)
     with open(response_file + extension, "r", encoding="utf-8") as file:
-        text = file.read()
+        text: str = file.read()
 
     response = client.audio.speech.create(
         model=model,
@@ -22,7 +23,7 @@ def openai_speak(
         input=text,
     )
 
-    audio_file = response_file + '.' + output_format
+    audio_file: str = response_file + '.' + output_format
     response.stream_to_file(audio_file)
 
     return audio_file

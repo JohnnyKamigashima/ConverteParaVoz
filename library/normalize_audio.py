@@ -2,7 +2,7 @@ from pydub import AudioSegment
 from pydub.utils import make_chunks
 
 
-def normalize_audio(file_name):
+def normalize_audio(file_name: str) -> str:
     """
     Normalize the audio file by loading it, dividing it into 1-second segments,
     calculating the RMS value of each segment, and normalizing the volume.

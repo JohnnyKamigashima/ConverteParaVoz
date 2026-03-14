@@ -1,7 +1,7 @@
 import telebot
 
 
-def audio_send(chat_id, output_audio, bot_token):
+def audio_send(chat_id: str, output_audio: str, bot_token: str) -> None:
     """
     Send an audio file to a chat using a Telegram bot.
 
@@ -13,5 +13,5 @@ def audio_send(chat_id, output_audio, bot_token):
         None
     """
     bot = telebot.TeleBot(bot_token)
-    audio_file = open(output_audio, 'rb')
-    bot.send_audio(chat_id = chat_id, audio = audio_file, timeout=600)
+    with open(output_audio, 'rb') as audio_file:
+        bot.send_audio(chat_id=chat_id, audio=audio_file, timeout=600)
