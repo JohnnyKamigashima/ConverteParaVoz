@@ -1,4 +1,4 @@
-def substituir_quebras_de_linha(texto, caracteres):
+def substituir_quebras_de_linha(texto: str, caracteres: int) -> str:
     """
         Generate a function comment for the given function body in a markdown
         code block with the correct language syntax.
@@ -10,14 +10,15 @@ def substituir_quebras_de_linha(texto, caracteres):
         Returns:
             str: The processed text with line breaks substituted.
     """
+    if caracteres <= 0:
+        raise ValueError("caracteres must be greater than zero")
+
     texto = texto.replace(". ", ".\n")
-
     texto = texto.replace("\n", " ")
-
     texto = texto.replace("\n\n", "\n")
 
-    linhas = texto.split("\n")
-    linhas_formatadas = []
+    linhas: list[str] = texto.split("\n")
+    linhas_formatadas: list[str] = []
     for linha in linhas:
         if len(linha) < caracteres:
             linha = linha.replace("\n", " ")

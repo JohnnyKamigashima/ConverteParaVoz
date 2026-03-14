@@ -1,11 +1,11 @@
-def concatenar_arquivos(lista_arquivos):
+def concatenar_arquivos(lista_arquivos: list[str]) -> str:
     """
     Recebe uma lista de arquivos .txt, concatena o conteúdo deles e retorna uma string.
 
     :param lista_arquivos: Lista de caminhos para os arquivos .txt.
     :return: String contendo o conteúdo concatenado de todos os arquivos.
     """
-    conteudo_concatenado = ""
+    conteudo_concatenado: str = ""
 
     for arquivo in lista_arquivos:
         try:
@@ -13,8 +13,8 @@ def concatenar_arquivos(lista_arquivos):
                 conteudo_concatenado += file.read() + "\n"  # Adiciona uma quebra de linha entre os arquivos
         except FileNotFoundError:
             print(f"Arquivo não encontrado: {arquivo}")
-        except Exception as e:
-            print(f"Erro ao ler o arquivo {arquivo}: {e}")
+        except OSError as error:
+            print(f"Erro ao ler o arquivo {arquivo}: {error}")
 
     return conteudo_concatenado
 

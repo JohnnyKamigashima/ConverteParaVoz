@@ -2,9 +2,8 @@
 """
 import shutil
 
-from library.convert_mp3_ogg import convert_mp3_ogg
-from library.audio_send import audio_send
-def copy_file(source_file, destination_file):
+
+def copy_file(source_file: str, destination_file: str) -> None:
     """
     Copy a file from the source path to the destination path.
 

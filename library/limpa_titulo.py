@@ -1,7 +1,7 @@
 from unidecode import unidecode
 
 
-def limpa_titulo(titulo:str, maximo_caracteres:int):
+def limpa_titulo(titulo: str, maximo_caracteres: int) -> str:
     """
     Removes the first line of a given text.
 
@@ -10,9 +10,10 @@ def limpa_titulo(titulo:str, maximo_caracteres:int):
         maximo_caracteres (int): The maximum number of characters allowed in a line.
         """
 
-    invalid_chars = ['<', '>', ':', '"', '/', '\\', '|', '?', '*' ]
+    invalid_chars: list[str] = ['<', '>', ':', '"', '/', '\\', '|', '?', '*']
 
     for char in invalid_chars:
         titulo = titulo.replace(char, '')
         titulo = titulo.replace(' ', '_')
+
     return unidecode(titulo)[:maximo_caracteres]

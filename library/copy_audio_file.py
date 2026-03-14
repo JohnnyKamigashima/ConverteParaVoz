@@ -4,7 +4,7 @@ from library.copy_file import copy_file
 import os
 
 
-def copy_audio_file(response_file, output_file, audio_extension):
+def copy_audio_file(response_file: str, output_file: str, audio_extension: str) -> None:
     """
     Copies the audio file with the specified extension from the response_file to the output_file.
 
@@ -16,5 +16,6 @@ def copy_audio_file(response_file, output_file, audio_extension):
     Returns:
     None
     """
-    if os.path.exists(response_file + '.' + audio_extension):
-        copy_file(response_file + '.' + audio_extension, output_file)
+    source_audio_file: str = f"{response_file}.{audio_extension}"
+    if os.path.exists(source_audio_file):
+        copy_file(source_audio_file, output_file)

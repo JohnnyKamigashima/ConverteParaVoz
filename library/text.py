@@ -1,6 +1,8 @@
 """Text manipulation functions
 """
-def limpar_linhas_vazias(texto):
+
+
+def limpar_linhas_vazias(texto: str | None) -> str:
     """
     Removes empty lines from a given text.
 
@@ -14,8 +16,8 @@ def limpar_linhas_vazias(texto):
         return ""
     if not isinstance(texto, str):
         raise TypeError("Input must be a string")
-    linhas = texto.splitlines()
-    linhas_limpas = [line for line in linhas if line.strip()]
-    texto_limpo = "\n".join(linhas_limpas).strip()
+    linhas: list[str] = texto.splitlines()
+    linhas_limpas: list[str] = [line for line in linhas if line.strip()]
+    texto_limpo: str = "\n".join(linhas_limpas).strip()
     return texto_limpo
 

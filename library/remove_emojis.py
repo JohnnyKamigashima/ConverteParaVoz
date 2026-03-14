@@ -1,7 +1,7 @@
 import re
 
 
-def remove_emojis(text):
+def remove_emojis(text: str) -> str:
     """
     Remove emojis from the given text.
 
@@ -24,9 +24,9 @@ def remove_emojis(text):
                                "]+", flags=re.UNICODE)
 
     if not isinstance(text, str):
-        return None
+        raise TypeError("text must be a string")
 
-    if text == '':
-        return ''
+    if text == "":
+        return ""
 
-    return emoji_pattern.sub(r'', text)
+    return emoji_pattern.sub(r"", text)
